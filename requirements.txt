@@ -1,2 +1,4 @@
 flask
 audio-metadata
+pyqrcode
+
