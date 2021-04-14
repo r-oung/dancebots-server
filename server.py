@@ -4,76 +4,51 @@
 
 Starts a simple HTML server.
 """
-import os
-import socket
-import audio_metadata
+import argparse
 import pyqrcode
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, send_from_directory, abort
+from utils import get_ip, sec2min, get_files
 
-# @TODO https://stackoverflow.com/questions/43346486/change-static-folder-from-config-in-flask
+
+# Parse command line arguments
+PARSER = argparse.ArgumentParser(
+    description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+)
+PARSER.add_argument("path", help="Path to audio folder")
+ARGS = PARSER.parse_args()
+
+# Start webapp
 app = Flask(__name__)
+app.config["AUDIO_FOLDER"] = ARGS.path
+# app.config["AUDIO_FOLDER"] = "static"
+# app.static_url_path = ARGS.path
+# app.static_folder = app.root_path + app.static_url_path
+
+print(app.static_url_path)
+print(app.static_folder)
 
 
-def get_ip():
-    """Get local IP address.
-
-    https://stackoverflow.com/a/28950776
-    """
-    # pylint: disable=C0103, W0703
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        s.connect(("10.255.255.255", 1))
-        ip = s.getsockname()[0]
-    except Exception:
-        ip = "127.0.0.1"
-    finally:
-        s.close()
-    return ip
-
-
-def sec2min(sec):
-    """Convert seconds to minutes."""
-    print(sec)
-    min_val = int(sec // 60)
-    sec_val = int(sec % 60)
-    str_val = "{:02}:{:02}".format(min_val, sec_val)
-    print(str_val)
-    return str_val
-
-
-def get_files(directory):
-    """Get files."""
-    filelist = os.listdir(directory)
-
-    files = []
-    for filename in filelist:
-        metadata = audio_metadata.load(os.path.join(directory, filename))
-        files.append(
-            {
-                "filename": filename,
-                "url": url_for("static", filename=filename),
-                "size": "{:02}".format(round(metadata.filesize / 1048576, 2)),
-                "duration": sec2min(metadata.streaminfo.duration),
-                # "album": metadata.tags.album[0],
-                # "artist": metadata.tags.artist,
-                "title": metadata.tags.title[0],
-            }
-        )
-
-    return files
-
-
+# Define routes
 @app.route("/")
-def home():
-    """Home route."""
-    return render_template("home.html", files=get_files("static"))
+def audio_list():
+    """Audio list route."""
+    return render_template("audio_list.html", files=get_files(app.config["AUDIO_FOLDER"]))
 
 
-if __name__ == "__main__":
-    print(f"\nRunning on http://{get_ip()}:5000")
-    url = pyqrcode.create(f"http://{get_ip()}:5000")
-    print(url.terminal(quiet_zone=1))
+@app.route("/<path:filename>", methods=["GET"])
+def audio_file(filename):
+    try:
+        # return send_from_directory(app.config["AUDIO_FOLDER"], filename=filename, mimetype="audio/mpeg, audio/wav", as_attachment=True)
+        return send_from_directory(app.config["AUDIO_FOLDER"], filename=filename, as_attachment=False)
+    except FileNotFoundError:
+        abort(404)
 
-    # Make server publicly available
-    # https://flask.palletsprojects.com/en/1.1.x/quickstart/#a-minimal-application
-    app.run(debug=False, host="0.0.0.0")
+
+# Print server details
+qrcode = pyqrcode.create(f"http://{get_ip()}:5000")
+print(qrcode.terminal(quiet_zone=1))
+print("Scan the QR code or go to the following address: http://{get_ip()}:5000")
+
+# Make server publicly available
+# https://flask.palletsprojects.com/en/1.1.x/quickstart/#a-minimal-application
+app.run(debug=True, host="0.0.0.0")
