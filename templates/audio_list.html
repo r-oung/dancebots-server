@@ -1,10 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
 
-  <div class="list-group">
+  <div class="list-group audio-files">
   {% for file in files %}
-    <a href="{{ url_for('audio_file', filename=file.name) }}" class="list-group-item list-group-item-action">
-    <!-- <a href="{{ url_for('static', filename='test_move.wav') }}" class="list-group-item list-group-item-action"> -->
+    <a href="#" class="list-group-item list-group-item-action">
+    <!-- <a href="{{ url_for('audio_file', filename=file.name) }}" class="list-group-item list-group-item-action"> -->
       <div class="d-flex w-100 justify-content-between">
         <h5 class="mb-1">{{ file.name }}</h5>
         <small class="text-muted">{{ file.duration }}</small>
@@ -13,9 +13,13 @@
     </a>
   {% endfor %}
 
-  <audio controls>
-    <!-- <source src="{{ url_for('static', filename='test_move.wav') }}" type="audio/wav"> -->
-    <source src="{{ url_for('audio_file', filename='test_light.wav') }}" type="audio/wav">
-  </audio>
+  <div class="fixed-bottom">
+    <div class="container">
+      <audio controls>
+        <!-- <source src="{{ url_for('static', filename='test_move.wav') }}" type="audio/wav"> -->
+        <source src="{{ url_for('audio_file', filename='dance_demo.mp3') }}" type="audio/wav">
+      </audio>
+    </div>
+  </div>
   
 {% endblock content %}
