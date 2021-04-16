@@ -21,7 +21,9 @@ def get_ip():
 
 
 def sec2min(sec):
-    """Convert seconds to minutes."""
+    """Convert seconds to minutes.
+    
+    """
     min_val = int(sec // 60)
     sec_val = int(sec % 60)
     str_val = "{:02}:{:02}".format(min_val, sec_val)
@@ -29,19 +31,20 @@ def sec2min(sec):
     return str_val
 
 
-def get_files(directory):
-    """Get files."""
-    # Get all files in the directory
-    filelist = os.listdir(directory)
+def get_files(path):
+    """Get files from a specified path.
+    
+    """
+    # Get all files in the path
+    filelist = os.listdir(path)
 
     # Filter file types
-    filelist = [ file for file in filelist if file.endswith( ('.wav', '.mp3') ) ]
-    print(filelist)
+    filelist = [ file for file in filelist if file.endswith( ('.mp3', '.wav', '.ogg') ) ]
 
     # Create files object
     files = []
     for filename in filelist:
-        metadata = audio_metadata.load(os.path.join(directory, filename))
+        metadata = audio_metadata.load(os.path.join(path, filename))
         files.append(
             {
                 "name": filename,
@@ -55,4 +58,13 @@ def get_files(directory):
 
 
 if __name__ == "__main__":
-    get_files("audio")
+    """Tests"""
+    print(get_ip())
+
+    print(sec2min(1))
+    print(sec2min(10))
+    print(sec2min(100))
+    print(sec2min(1000))
+
+    print(get_files("data"))
+

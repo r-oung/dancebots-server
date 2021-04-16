@@ -13,9 +13,9 @@ if [ ! -d "${VENV_PATH}" ]; then
     PYTHON=`which python3`
 
     if [ ! -f "${PYTHON}" ]; then
-        echo "Could not find Python"
+        echo "Could not find Python 3"
     fi
-    virtualenv -p "${PYTHON}" "${VENV_PATH}"
+    python3 -m venv venv/
 fi
 
 # Activate the virtual environment
