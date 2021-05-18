@@ -41,4 +41,4 @@ print("Don't forget, your computer should be on the same network as your mobile 
 
 # Make server available to other devices on the same network
 # https://flask.palletsprojects.com/en/1.1.x/quickstart/#a-minimal-application
-app.run(debug=True, host="0.0.0.0")
+app.run(debug=False, host="0.0.0.0")
