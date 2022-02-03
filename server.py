@@ -1,8 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""File server.
+"""HTML file server
 
-Starts a simple HTML server.
+Starts a simple HTML server with its address generated as a QR-code.
+
+Copyright (C) 2021 Raymond Oung
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 import argparse
 import pyqrcode
@@ -32,6 +47,16 @@ def audio_file(filename):
         return send_from_directory(app.config["AUDIO_FOLDER"], filename=filename, as_attachment=False)
     except FileNotFoundError:
         abort(404)
+
+# Print license notice
+print("""
+dancebots-server  Copyright (C) 2021  Raymond Oung
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions. Refer to the license notice at the
+top of the script.
+
+""")
 
 # Print server details
 qrcode = pyqrcode.create(f"http://{get_ip()}:5000")

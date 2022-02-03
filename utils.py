@@ -1,4 +1,23 @@
 # -*- coding: utf-8 -*-
+"""Utilities
+
+A collection of helper utility functions.
+
+Copyright (C) 2021 Raymond Oung
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""
 import os
 import socket
 import audio_metadata
@@ -6,7 +25,6 @@ import audio_metadata
 def get_ip():
     """Get local IP address.
 
-    https://stackoverflow.com/a/28950776
     """
     # pylint: disable=C0103, W0703
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
